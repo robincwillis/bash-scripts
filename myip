@@ -1,0 +1,67 @@
+#!/bin/bash
+
+function usage()
+{
+cat << EOF
+Dispays either internal or external ip 
+default is external
+Requires curl
+	
+OPTIONS:
+-h		Show this message
+-i		Show internal ip
+-o		Show external ip
+	
+EXAMPLE:
+	
+myip -i
+	
+EOF
+}
+
+function echointernalip()
+{
+	IP="$(ifconfig | egrep 'inet ' | sed -e 's/inet //' -e 's/addr://' -e 's/ Bcast.*//' -e 's/127.*//')"
+	echo $IP
+}
+
+function echoexternalip()
+{
+	curl ifconfig.me
+}
+
+INTERNALIP=false
+EXTERNALIP=false
+while getopts "hio" OPTION
+do
+	case $OPTION in
+		h)
+			usage
+			exit 1
+			;;
+		i)
+			INTERNALIP=true
+			;;
+		o)
+			EXTERNALIP=true
+			;;
+		?)
+			usage
+			exit
+			;;
+	esac
+done
+
+if $INTERNALIP ; then
+  	echointernalip
+fi
+
+if $EXTERNALIP ; then
+  	echoexternalip
+fi
+
+if ! $EXTERNALIP && ! $INTERNALIP ; then
+	echoexternalip
+fi
+
+exit 0

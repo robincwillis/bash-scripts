@@ -1,0 +1,214 @@
+#!/bin/sh
+
+function movie(){
+	OUTPUTDIR='OUTPUT-MOVIE'
+	mkdir $OUTPUTDIR
+	for f in *$INPUTFORMAT
+		do
+		OUTPUTNAME=${f%$INPUTFORMAT}$OUTPUTFORMAT
+		ffmpeg -i "$f" -sameq "$OUTPUTDIR"/"$OUTPUTNAME"
+		echo $OUTPUTNAME
+	done 
+}
+
+function audio(){
+OUTPUTDIR='OUTPUT-AUDIO'
+mkdir $OUTPUTDIR
+for f in *$INPUTFORMAT
+	do
+	OUTPUTNAME=${f%$INPUTFORMAT}$OUTPUTFORMAT
+	lame -h "$f" "$OUTPUTDIR"/"$OUTPUTNAME"
+done
+
+}
+
+function image(){
+OUTPUTDIR='OUTPUT-IMAGE'
+mkdir $OUTPUTDIR
+for f in *$INPUTFORMAT
+	#Reqiures ImageMagick #sudo port install ImageMagick
+	do
+	OUTPUTNAME=${f%$INPUTFORMAT}$OUTPUTFORMAT
+	convert "$f" "$OUTPUTDIR"/"$OUTPUTNAME"
+	echo $OUTPUTNAME
+done
+
+}
+
+function html5(){
+	OUTPUTDIR='OUTPUT-HTML5'
+	mkdir $OUTPUTDIR
+	for f in *$INPUTFORMAT
+		do
+		echo $INPUTFORMAT
+		OUTPUTNAME=${f%$INPUTFORMAT}$OUTPUTFORMAT
+	#	filename=${filename%.*}
+		I_W=$(ffmpeg -i $f  2>&1 |grep Video|awk '{ split( $6, pieces,  /[x,]/ ) ; print pieces[1] }')
+		I_H=$(ffmpeg -i $f 2>&1 |grep Video|awk '{ split( $6, pieces,  /[x,]/ ) ; print pieces[2] }')
+		WIDTH=$(getMod16 15)
+		HEIGHT=$(getMod16 35)
+
+		echo $WIDTH
+		echo $HEIGHT
+		ffmpeg -i "$f" -vcodec libx264 -vpre lossless_medium -b 250k -bt 50k -acodec libfaac -ab 56k -ac 2 -s "$WIDTH"x"$HEIGHT" "$OUTPUTDIR"/video_h264_"$OUTPUTNAME".mp4
+		ffmpeg -i "$f"  -b 1500k -vcodec libvpx -acodec libvorbis -ab 160000 -f webm -g 30 -s "$WIDTH"x"$HEIGHT" "$OUTPUTDIR"/video_webm_"$OUTPUTNAME".webm
+		ffmpeg -i "$f" -b 1500k -vcodec libtheora -acodec libvorbis -ab 160000 -g 30 -s "$WIDTH"x"$HEIGHT" "$OUTPUTDIR"/video_ogg_"$OUTPUTNAME".ogv
+		echo $OUTPUTNAME
+	done	
+	rm "opsnr.stt"
+}
+
+function h264(){
+	OUTPUTDIR='OUTPUT-H264'
+	mkdir $OUTPUTDIR
+	
+	for f in *$INPUTFORMAT
+		do
+		OUTPUTNAME=${f%$INPUTFORMAT}".mp4"
+		ffmpeg -i "$f" -vcodec libx264 -vpre libx264-lossless_medium "$OUTPUTDIR"/"$OUTPUTNAME"
+		echo $OUTPUTNAME
+	done
+}
+
+function ipad(){
+	echo "To Do"
+	#ffmpeg -i source_video.avi -b 300 -s 320x240 -vcodec xvid -ab 32 -ar 24000 -acodec aac final_video.mp4
+}
+
+function movietomp3(){
+
+for f in *$INPUTFORMAT
+	do
+	OUTPUTNAME=${f%$INPUTFORMAT}$OUTPUTFORMAT
+	ffmpeg -i "$f" -sameq -acodec libmp3lame "$OUTPUTDIR"/"$OUTPUTNAME"
+	echo $OUTPUTNAME
+done
+}
+
+function vector(){
+	echo "TO DO"
+	
+	OUTPUTDIR='OUTPUT-VECTOR'
+	mkdir $OUTPUTDIR
+
+	for f in *$INPUTFORMAT
+		do
+		OUTPUTNAME=${f%$INPUTFORMAT}$OUTPUTFORMAT
+		#gs -sDEVICE=tiff32nc -sOutputFile="$OUTPUTDIR"/"$OUTPUTNAME" "$f"
+		#-r150
+		gs -quality=100 dSAFER -dBATCH -dNOPAUSE -sOutputFile="$OUTPUTDIR"/"page--%02d-$OUTPUTNAME" $f
+		#gs -dNOPAUSE -sDEVICE=jpeg -r144 -sOutputFile=p%03d.jpg 
+		#ffmpeg -i "$f" -sameq "$OUTPUTDIR"/"$OUTPUTNAME"
+		#echo $OUTPUTNAME
+	done
+
+}
+
+function usage(){
+cat << EOF
+usage: $0 options
+
+must run inside directory of files to convert
+
+OPTIONS:
+   -h      Show this message
+   -t      type, can be [movie] [image] [audio]
+   -i      input format ie [.flac] [.flv]
+   -o      output format ie [.avi] [.mp3]
+   -v      todo Verbose
+
+EXAMPLE:
+
+batchconvert -t movie -i .flv -o .avi
+
+SINGLE TYPE FLAGS
+	-t		html5
+	-t		h264
+	-t		ipad
+
+EXAMPLE
+
+batchconvert -t h264
+
+EOF
+}
+
+function getMod16(){
+	COUNTER=$1
+	while [  $(( $COUNTER % 16 )) -ne 0 ]; do
+		let COUNTER=COUNTER+1 
+	done
+	echo $COUNTER
+}
+
+########################
+TYPE=
+I_W=
+I_H=
+INPUTFORMAT=
+OUTPUTFORMAT=
+WIDTH=
+HEIGHT=
+OUTPUTDIR='output'
+
+
+
+########################
+
+while getopts "ht:i:o:" OPTION
+	do
+	case $OPTION in
+	h)
+		usage
+		exit 1
+		;;
+	t)
+		TYPE=$OPTARG
+		;;
+	i)
+		INPUTFORMAT=$OPTARG
+		;;
+	o)
+		OUTPUTFORMAT=$OPTARG
+		;;
+	?)
+		usage
+		exit
+		;;
+	esac
+done
+# || [[ -z $INPUTFORMAT ]] || [[ -z $OUTPUTFORMAT ]]
+if [[ -z $TYPE ]]; then
+     usage
+     exit 1
+fi
+
+if [ "$TYPE" == "movie" ]; then
+
+	movie
+	exit 0
+
+elif [ "$TYPE" == "audio" ]; then
+
+	audio
+	exit 0
+	
+elif [ "$TYPE" == "image" ]; then
+
+	image
+	exit 0
+
+elif [ "$TYPE" == "html5" ]; then
+	
+	html5
+	exit 0
+
+elif [ "$TYPE" == "h264" ]; then
+	
+	h264
+	exit 0
+
+else
+	echo "hmmm dont think type is valid"
+	exit 0
+fi
