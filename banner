@@ -1,0 +1,54 @@
+#!/bin/bash
+
+
+function usage()
+{
+cat << EOF
+Dispays banners in all avaliable figlet font files
+Requires figlet
+	
+OPTIONS:
+-h		Show This message
+-m		Message to display
+	
+EXAMPLE:
+	
+banner -m "FIGLET"
+	
+EOF
+}
+
+function banner()
+{
+	FILES=/opt/local/share/figlet/*.flf
+
+	for f in $FILES
+	do
+		echo $f
+		figlet -f $f "$MESSAGE"
+	done
+}
+
+########################
+MESSAGE="DESIGNING CRIME"
+########################
+
+while getopts "hm:" OPTION
+	do
+		case $OPTION in
+		h)
+			usage
+			exit 1
+			;;
+		m)
+			MESSAGE=$OPTARG
+			;;
+		?)
+			usage
+			exit
+			;;
+		esac
+	done
+	
+banner
+exit 0
