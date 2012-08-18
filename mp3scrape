@@ -1,20 +1,8 @@
 #!/bin/bash
 
-#function list(){
-#	echo "line 1"
-#	echo "line 2"
-	#}
-
-#ls | xargs -L 1 echo
-#echo `ls`
-#for i in `ls` ; do echo $i ; done
-
-#cat myFile | while read x ; do echo $x ; done
-
 wget_function()
 {
    wget -r --level=1 --ignore-length -erobots=off -nd -np -H -A mp3,mp4’ $URL
-   #echo $?
 }
 
 cat <<EOF | while read URL; do wget_function; done
