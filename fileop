@@ -1,0 +1,140 @@
+#!/usr/bin/python
+# encoding: utf-8
+
+"""
+FileSort.py
+
+Created by Robin Willis on 2011-03-31.
+Copyright (c) 2011 __Designing Crime__. All rights reserved.
+"""
+
+import getopt, sys
+import os
+import os.path
+import datetime
+import time
+#import glob
+def prepend_index():
+	index = 0;
+	for file_name in dir:
+		index=index+1
+		
+		if index < 10:
+			new_name = "0" + str(index) + "_" + file_name
+		else:
+			new_name = str(index) + "_" + file_name
+		if verbose:
+			print new_name
+		os.rename(file_name,new_name)
+	
+
+def prepend_last_modified_date():
+	
+	index = 0;
+	date_file_list = []
+	#if we want to filter file types
+	#for file in glob.glob(folder + '/*.*'):
+	for file_name in dir:
+		
+		stats = os.stat(file_name)
+		lastmod_date = time.localtime(stats[8])
+		
+		
+		date_file_tuple = lastmod_date, file_name
+		#print date_file_tuple
+		date_file_list.append(date_file_tuple)
+		
+	
+	date_file_list.sort()
+	date_file_list.reverse()
+	#print date_file_list
+	#os.rename(file_name,new_name)
+	for file in date_file_list:
+	    # extract just the filename
+		folder, file_name = os.path.split(file[1])
+	    # convert date tuple to MM/DD/YYYY HH:MM:SS format
+		file_date = time.strftime("%m-%d-%y", file[0])
+		#print "%-40s %s" % ("filename:", "last modified:")
+		#print "%-40s %s" % (file_name, file_date)
+		new_name = file_date + "_" + file_name
+		if verbose:
+			print new_name
+		os.rename(file_name,new_name)
+
+def prepend_current_date():
+	
+	for file_name in dir:
+		
+		#print os.path.getmtime(file_name)
+		
+		#print lastmod_date
+		m_time = datetime.date.fromtimestamp(os.path.getmtime(file_name)).strftime("%m-%d-%y")
+		c_time = datetime.date.fromtimestamp(os.path.getctime(file_name)).strftime("%m-%d-%y")
+		
+		#print m_time
+		#print c_time
+		
+		base_name = os.path.splitext(file_name)[0]
+		file_ext = os.path.splitext(file_name)[1]
+		new_name = m_time + "_" + base_name + file_ext
+		if verbose:
+			print new_name
+		
+		os.rename(file_name,new_name)
+
+def usage():
+	print "Applies operations to all files in current directory"
+	print "Options:"
+	print "-c, --current   :  prepend current date to files"
+	print "-m, --modified  :  prepend last modified-date to files"
+	print "-i, --index     :  prepend index"
+	print ""
+	print "Example:"
+	print "fileop -c"
+	print ""
+	print "Todo:"
+	print "append date (modified / created option)"
+	print "sort into folders by year"
+	print "sort into folders by regular expression"
+	print "filter by filetype option"
+	
+def main():
+	
+	try:
+		opts, args = getopt.getopt(sys.argv[1:], "hf:cmiv", ["help", "format=", "current", "modified", "index"])
+	
+	except getopt.GetoptError, err:
+	    # print help information and exit:
+		print str(err) # will print something like "option -a not recognized"
+		usage()
+		sys.exit(2)
+	
+	for o, a in opts:
+
+		if o == "-v":
+			verbose = True
+		elif o in ("-c", "--current"):
+			prepend_current_date()
+		elif o in ("-m", "--modified"):
+			prepend_last_modified_date()
+		elif o in ("-i", "--index"):
+			prepend_index()
+		elif o in ("-h", "--help"):
+			usage()
+			sys.exit()
+		elif o in ("-f", "--format"):
+			format = a
+			print format
+		else:
+			assert False, "unhandled option"
+
+#---------------------------------------------------------------------------------------------------------
+
+format = None
+verbose = True
+#verbose probably not working because function is getting called before argument is getting set, lets just keep it on
+
+dir = os.listdir(os.getcwd())
+main()
+
+
