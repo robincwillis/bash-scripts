@@ -28,34 +28,66 @@
         </ul>
       </header>
       <section>
+        <h3>banner.</h3>
 
-		<h3>banner</h3>
-		<p>Test Figlet banners.</p>
-        
-		<h3>batchconvert</h3>
-		<p>convert files in batches right.</p>
+<p>test figlet banners:</p>
 
-		<h3>fileop</h3>
-		<p>Perform Some File Operations</p>
-		<pre><code>>fileop -i</code></pre>
-		<p>You can also do This.</p>
+<pre><code>OPTIONS:
+-h      Show This message
+-m      Message to display
 
-		<h3>mp3scrape</h3>
-		<p>use wget to scrap mp3s from your favorite audo blogs.</p>
+EXAMPLE:
 
-		<h3>myip</h3>
-		<p>quickly show me my ip, internal or external.</p>
+banner -m "FIGLET"
+</code></pre>
 
-		<h3>thf</h3>
-		<p>Toggle the display of hidden files in Mac Os X.</p>
-		
+<h3>fileop</h3>
 
-<!-- <p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
- -->
+<p>do some handy operations on file names like appending the date created or an index.</p>
 
+<pre><code>Applies operations to all files in current directory
+Options:
+-c, --current   :  prepend current date to files
+-m, --modified  :  prepend last modified-date to files
+-i, --index     :  prepend index
+
+Example:
+fileop -c
+</code></pre>
+
+<h3>mp3scrape</h3>
+
+<p>use wget to scrape mp3s from your favorite audio blogs.</p>
+
+<pre><code>mp3scrape
+</code></pre>
+
+<h3>myip</h3>
+
+<p>quickly show me my ip address, either internal or external.</p>
+
+<pre><code>Dispays either internal or external ip 
+default is external
+Requires curl
+
+OPTIONS:
+-h      Show this message
+-i      Show internal ip
+-o      Show external ip
+
+EXAMPLE:
+
+myip -i
+</code></pre>
+
+<h3>thf</h3>
+
+<p>Toggle the display of hidden files in Mac Os X.</p>
+
+<pre><code>thf
+</code></pre>
       </section>
-     
-	  <footer>
+      <footer>
         <p>This project is maintained by <a href="https://github.com/robincwillis">robincwillis</a></p>
         <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
