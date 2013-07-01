@@ -28,7 +28,7 @@
         </ul>
       </header>
       <section>
-        <h3>banner.</h3>
+        <h3>banner</h3>
 
 <p>test figlet banners:</p>
 
@@ -41,9 +41,34 @@ EXAMPLE:
 banner -m "FIGLET"
 </code></pre>
 
+<h3>batchconvert</h3>
+
+<p>Batch convert video, sound, and image files.</p>
+<p>Run inside directory of files to convert.</p>
+
+<pre><code>OPTIONS:
+   -h      Show this message
+   -t      type, can be [movie] [image] [audio]
+   -i      input format ie [.flac] [.flv]
+   -o      output format ie [.avi] [.mp3]
+   -v      todo Verbose
+
+EXAMPLE:
+
+batchconvert -t movie -i .flv -o .avi
+
+SINGLE TYPE FLAGS
+  -t    html5
+  -t    h264
+  -t    ipad
+
+EXAMPLE
+
+batchconvert -t h264</code></pre>
+
 <h3>fileop</h3>
 
-<p>do some handy operations on file names like appending the date created or an index.</p>
+<p>Do some handy operations on file names like appending the date created or an index.</p>
 
 <pre><code>Applies operations to all files in current directory
 Options:
