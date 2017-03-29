@@ -1,10 +1,10 @@
 #!/bin/bash
 echo '
- ________          _________  ________           _____  ________  ________     
-|\   __  \        |\___   ___\\   __  \         / __  \|\   __  \|\   __  \    
-\ \  \|\  \       \|___ \  \_\ \  \|\  \       |\/_|\  \ \  \|\  \ \  \|\  \   
- \ \  \\\  \           \ \  \ \ \  \\\  \      \|/ \ \  \ \  \\\  \ \  \\\  \  
-  \ \  \\\  \           \ \  \ \ \  \\\  \          \ \  \ \  \\\  \ \  \\\  \ 
+ ________          _________  ________           _____  ________  ________
+|\   __  \        |\___   ___\\   __  \         / __  \|\   __  \|\   __  \
+\ \  \|\  \       \|___ \  \_\ \  \|\  \       |\/_|\  \ \  \|\  \ \  \|\  \
+ \ \  \\\  \           \ \  \ \ \  \\\  \      \|/ \ \  \ \  \\\  \ \  \\\  \
+  \ \  \\\  \           \ \  \ \ \  \\\  \          \ \  \ \  \\\  \ \  \\\  \
    \ \_______\           \ \__\ \ \_______\          \ \__\ \_______\ \_______\
     \|_______|            \|__|  \|_______|           \|__|\|_______|\|_______|
 '
@@ -36,7 +36,7 @@ function go {
 ### PROFILE
 echo $OK" Adding .bash_profile and .bashrc..."
 mkdir $HOME/bin
-#[Todo: option for dont overwrite flag] -n 
+#[Todo: option for dont overwrite flag] -n
 #go cp $DIR/bash_profile.sh $HOME/.bash_profile
 #go cp $DIR/bashrc.sh $HOME/.bashrc
 # Todo: aliases (more bash profile stuff)
@@ -92,6 +92,8 @@ echo $OK" Ruby Gems..."
 #gem install rails compass heroku jekyll pg sqlite3 msgpack activerecord redcarpet rspec simplecov yard bundler
 echo $T_UP
 
+### NODE
+
 echo $OK" Node Packages..."
 # npm install -g grunt-cli
 # npm install -g bower
@@ -125,7 +127,7 @@ echo $OK" Databases..."
 # #create db's
 
 # createuser msf -P -h localhost; createdb -O msf msf -h localhost
-# pass - 
+# pass -
 
 echo $T_UP
 
